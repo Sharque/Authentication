@@ -14,11 +14,27 @@ enum UserRole {
 
 model User {
   id             String    @id @default(uuid())
-  sName          String?
-  sEmail         String?   @unique
-  bEmailVerified DateTime?
+  nEmailUserID   Int?
+  sEmail         String    @unique
+  sPassword      String
+  sFullName      String
+  nCompanyID     String?
+  dtExpiry       String?
+  bSentReminder1 Int?
+  bSentReminder2 Int?
+  bSentReminder3 Int?
+  sComanyName    String?
+  sContactNo     Int?
+  sPythaDongalNo String?
+  bApproved      Int?
+  bActive        Int?      @default(0)
+  bEmailVerified Int       @default(0)
+  bFixed         Int?      @default(0)
+  nCreatedID     Int?
+  dtCreated      DateTime? @default(now())
+  nModifiedID    DateTime?
+  dtModified     DateTime?
   image          String?
-  sPassword      String?
   role           UserRole  @default(USER)
   accounts       Account[]
 }

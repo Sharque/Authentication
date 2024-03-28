@@ -36,7 +36,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
   await db.user.create({
     data: {
-      sName: name,
+      sFullName: name,
       sEmail: email,
       sPassword: "*" + hashedPasswordUppercase,
     },

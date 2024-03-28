@@ -19,7 +19,7 @@ export const {
     async linkAccount({ user }) {
       await db.user.update({
         where: { id: user.id },
-        data: { bEmailVerified: new Date() },
+        data: { bEmailVerified: 1 },
       });
     },
   },
