@@ -14,18 +14,17 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
   if (!validateField.success) {
     return { error: "Invalid field" };
   }
-
   const { email, password } = validateField.data;
 
   const existingUser = await getUserByEmail(email);
 
-  if (!existingUser || !existingUser.email || !existingUser.password) {
+  if (!existingUser || !existingUser.sEmail || !existingUser.sPassword) {
     return { error: "Email does not exist" };
   }
 
-  if (!existingUser.emailVerified) {
+  if (!existingUser.bEmailVerified) {
     const verificationToken = await generateVerificationToken(
-      existingUser.email
+      existingUser.sEmail
     );
 
     await sendVerificationEmail(

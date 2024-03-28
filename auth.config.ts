@@ -23,7 +23,7 @@ export default {
 
           const user = await getUserByEmail(email);
 
-          if (!user || !user.password) return null;
+          if (!user || !user.sPassword) return null;
 
           const hashedPassword = crypto
             .createHash("sha1")
@@ -36,7 +36,7 @@ export default {
 
           const hashedPasswordUppercase = "*" + hashedPasswordHex.toUpperCase();
 
-          if (hashedPasswordUppercase === user.password) return user;
+          if (hashedPasswordUppercase === user.sPassword) return user;
         }
         return null;
       },

@@ -19,7 +19,7 @@ export const {
     async linkAccount({ user }) {
       await db.user.update({
         where: { id: user.id },
-        data: { emailVerified: new Date() },
+        data: { bEmailVerified: new Date() },
       });
     },
   },
@@ -29,7 +29,7 @@ export const {
 
       const existingUser = await getUserById(user.id!);
 
-      if (!existingUser?.emailVerified) return false;
+      if (!existingUser?.bEmailVerified) return false;
 
       return true;
     },
@@ -52,6 +52,7 @@ export const {
       return token;
     },
   },
+  secret: process.env.NEXTAUTH_JWT_SECRET,
   adapter: PrismaAdapter(db),
   session: { strategy: "jwt" },
   ...authConfig,

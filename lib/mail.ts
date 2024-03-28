@@ -3,7 +3,7 @@ const domain = process.env.NEXT_PUBLIC_BASE_URL;
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
+  host: "smtp.google.com",
   port: 587,
   secure: false,
   auth: {
