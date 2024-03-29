@@ -49,12 +49,15 @@ export function RegisterForm() {
     setSuccess("");
     startTransition(() => {
       register(values).then((data) => {
+        console.log("data", data);
+        // localStorage.setItem("data", JSON.stringify(data));
         setError(data.error);
         setSuccess(data.success);
       });
     });
   };
   // auth
+  console.log("success", success);
 
   return (
     <div className="max-w-lg w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">

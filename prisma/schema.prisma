@@ -13,7 +13,8 @@ enum UserRole {
 }
 
 model memailuser {
-  nEmailUserID   Int       @id @db.UnsignedInt
+  id             String    @id @default(uuid())
+  nEmailUserID   Int       @db.UnsignedInt
   sEmail         String    @unique(map: "memailuser_sEmail_key") @db.VarChar(255)
   sPassword      String    @db.VarChar(255)
   sFullName      String    @db.VarChar(200)
@@ -43,6 +44,15 @@ model VerificationToken {
 }
 
 model PasswordResetToken {
+  id      String   @id @default(uuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model Verify {
   id      String   @id @default(uuid())
   email   String
   token   String   @unique

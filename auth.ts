@@ -1,9 +1,11 @@
-import NextAuth from "next-auth";
+import NextAuth, { Account } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
 import authConfig from "./auth.config";
 import { db } from "./lib/db";
 import { getUserById } from "./data/user";
+import { UpadtedUserInterface } from "./interface/UserInterface";
+import { getSession } from "next-auth/react";
 
 export const {
   handlers: { GET, POST },
@@ -24,10 +26,17 @@ export const {
     },
   },
   callbacks: {
-    async signIn({ user, account }) {
+    async signIn({
+      user,
+      account,
+    }: {
+      user: UpadtedUserInterface;
+      account: Account | null;
+    }) {
       if (account?.provider !== "credentials") return true;
 
-      const existingUser = await getUserById(user.id!);
+      const existingUser = await getUserById(user.nEmailUserID!.toString());
+      console.log("existingUser", existingUser);
 
       if (existingUser?.bEmailVerified === 0) return false;
 
@@ -36,6 +45,9 @@ export const {
 
     async session({ token, session }) {
       if (token.sub && session.user) {
+        console.log("sessionInSession", session);
+        console.log("tokenInSession", token);
+        // console.log("newSession", newSession);
         session.user.id = token.sub;
       }
 
@@ -43,9 +55,11 @@ export const {
     },
 
     async jwt({ token }) {
+      // console.log("tokenInJWT", token);
       if (!token.sub) return token;
 
       const existingUser = await getUserById(token.sub);
+      // console.log("existingUserInJWT", existingUser);
 
       if (!existingUser) return token;
 

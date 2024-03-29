@@ -36,7 +36,7 @@ export function LoginForm() {
   const onClick = async (provider: "google") => {
     try {
       await signIn(provider, {
-        callbackUrl: DEFAULT_LOGIN_REDIRECT,
+        callbackUrl: "/auth/login",
       });
     } catch (error) {
       window.location.href = "/auth/login?error=OAuthAccountNotLinked";
@@ -59,6 +59,7 @@ export function LoginForm() {
     setSuccess("");
     startTransition(() => {
       login(values).then((data) => {
+        console.log("data", data);
         setError(data?.error);
         setSuccess(data?.success);
       });
