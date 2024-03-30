@@ -1,47 +1,25 @@
 import { getUserById } from "@/data/user";
-import { NextApiRequest, NextApiResponse } from "next";
-import { Session } from "next-auth";
-import { getSession } from "next-auth/react";
 
-export interface CustomApiRequest extends NextApiRequest {
-  session?: Session;
-}
+export async function POST(req: any, res: any) {
+  try {
+    console.log("req.body", req.body);
+    const { user, account } = req.body;
 
-async function signIn(req: NextApiRequest, res: NextApiResponse) {
-  console.log("req", req);
-  const { user, account } = req.body as {
-    user: any;
-    account: any;
-  };
+    if (!user || !account) {
+      return res.json({ message: "Invalid request body" });
+    }
 
-  if (account?.provider !== "credentials") {
-    return res.status(200).json({ success: true });
-  }
+    const existingUser = await getUserById(user.nEmailUserID!.toString());
 
-  const existingUser = await getUserById(user.nEmailUserID!.toString());
-  console.log("existingUser", existingUser);
-
-  if (existingUser?.bEmailVerified === 0) {
-    return res
-      .status(200)
-      .json({ success: false, message: "Email not verified" });
-  }
-  //@ts-expect-error
-  const session = await getSession({ req });
-  if (session) {
-    //@ts-expect-error
-
-    session.user = existingUser;
-    //@ts-expect-error
-
-    await session.save(); // Save the session changes
-  } else {
-    //@ts-expect-error
+    if (!existingUser || existingUser.bEmailVerified === 0) {
+      return res.json({ message: "Unauthorized" });
+    }
 
     req.session.user = existingUser;
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error("Error processing login:", error);
+    return res.json({ message: "Internal Server Error" });
   }
-
-  return res.status(200).json({ success: true });
 }
-
-export default signIn;

@@ -36,7 +36,6 @@ export const {
       if (account?.provider !== "credentials") return true;
 
       const existingUser = await getUserById(user.nEmailUserID!.toString());
-      console.log("existingUser", existingUser);
 
       if (existingUser?.bEmailVerified === 0) return false;
 
@@ -45,9 +44,6 @@ export const {
 
     async session({ token, session }) {
       if (token.sub && session.user) {
-        console.log("sessionInSession", session);
-        console.log("tokenInSession", token);
-        // console.log("newSession", newSession);
         session.user.id = token.sub;
       }
 
