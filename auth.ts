@@ -5,7 +5,6 @@ import authConfig from "./auth.config";
 import { db } from "./lib/db";
 import { getUserById } from "./data/user";
 import { UpadtedUserInterface } from "./interface/UserInterface";
-import { getSession } from "next-auth/react";
 
 export const {
   handlers: { GET, POST },

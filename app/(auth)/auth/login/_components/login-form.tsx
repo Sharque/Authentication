@@ -24,6 +24,7 @@ import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { signInService } from "@/services/service";
 
 export function LoginForm() {
   const searchParams = useSearchParams();
@@ -45,6 +46,7 @@ export function LoginForm() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
+  const [userValues, setUserValues] = useState();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -58,11 +60,32 @@ export function LoginForm() {
     setError("");
     setSuccess("");
     startTransition(() => {
-      login(values).then((data) => {
-        console.log("data", data);
-        setError(data?.error);
-        setSuccess(data?.success);
-      });
+      // login(values).then((data) => {
+      //   console.log("data", data);
+      //   setError(data?.error);
+      //   setSuccess(data?.success);
+      // });
+      try {
+        const signInFunction = async (data: z.infer<typeof LoginSchema>) => {
+          const dataInForm = await signInService(data);
+          const { data: signInData } = dataInForm;
+
+          const { success, user } = signInData.data;
+
+          // For Testing
+
+          setUserValues(user);
+          // console.log("userValues", userValues);
+          sessionStorage.setItem("user", JSON?.stringify(user));
+
+          // For Testing
+          // const sessionData = sessionStorage.getItem("user");
+          // console.log("sessionData", sessionData);
+        };
+        signInFunction(values);
+      } catch (error) {
+        console.log("error", error);
+      }
     });
   };
 
